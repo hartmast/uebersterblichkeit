@@ -175,7 +175,7 @@ pre code {
 <p>Zusatzpakete:</p>
 <pre class="r"><code>library(tidyverse)
 library(readxl)</code></pre>
-<p>Daten zu Sterbefallzahlen:</p>
+<p>Daten zu Sterbefallzahlen (Daten <a href="https://github.com/hartmast/uebersterblichkeit/blob/main/sterbefaelle.csv">hier</a>)</p>
 <pre class="r"><code># Daten einlesen (extrahiert aus Excel-Tabelle https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Sterbefaelle-Lebenserwartung/Tabellen/sonderauswertung-sterbefaelle.html?nn=209016)
 sterbefaelle &lt;- read_csv(&quot;sterbefaelle_nach_bundesland.csv&quot;, col_types = c(&quot;n&quot;, &quot;n&quot;, &quot;c&quot;, &quot;c&quot;, rep(&quot;n&quot;, 42)))
 
@@ -199,7 +199,7 @@ sf$value &lt;- as.numeric(gsub(&quot; &quot;, &quot;&quot;, sf$value))
 
 # nur KW 36 bis 40
 sf36bis40 &lt;- filter(sf, KW %in% c(36:40))</code></pre>
-<p>Daten zur Impfquote - leider geben die Autoren nicht an, auf welchem Stand die Zahlen sind, mit denen sie gearbeitet haben - da ihre Studie auf den 16.11. datiert ist, arbeiten wir im Folgenden mit den Daten von diesem Tag:</p>
+<p>Daten zur Impfquote - leider geben die Autoren nicht an, auf welchem Stand die Zahlen sind, mit denen sie gearbeitet haben - da ihre Studie auf den 16.11. datiert ist, arbeiten wir im Folgenden mit den Daten von diesem Tag (Daten <a href="https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Archiv/2021-11-16_Deutschland_Impfquoten_COVID-19.csv">hier</a>):</p>
 <pre class="r"><code># Daten einlesen
 impf &lt;- read_csv(&quot;2021-11-16_Deutschland_Impfquoten_COVID-19.csv&quot;)</code></pre>
 <pre><code>## Rows: 18 Columns: 22</code></pre>
@@ -336,12 +336,6 @@ uebersterblichkeit %&gt;% select(Bundesland, ues, Impfquote_gesamt_voll) %&gt;% 
 ## sample estimates:
 ##       cor 
 ## 0.8528976</code></pre>
-<pre class="r"><code>cor(c(500,2000,5000,10000,25000,50000,100000),
-         c(640,600,780,800,570,650,700))^2*100</code></pre>
-<pre><code>## [1] 0.008897774</code></pre>
-<pre class="r"><code>cor(c(500,2000,5000,10000,25000,50000,100000),
-         c(500,570,600,650,720,780,800))^2*100</code></pre>
-<pre><code>## [1] 72.74344</code></pre>
 
 
 

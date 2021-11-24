@@ -18,7 +18,7 @@ library(readxl)
 
 ```
 
-Daten zu Sterbefallzahlen:
+Daten zu Sterbefallzahlen (Daten [hier](https://github.com/hartmast/uebersterblichkeit/blob/main/sterbefaelle.csv))
 
 ```{r}
 
@@ -48,7 +48,7 @@ sf36bis40 <- filter(sf, KW %in% c(36:40))
 
 ```
 
-Daten zur Impfquote - leider geben die Autoren nicht an, auf welchem Stand die Zahlen sind, mit denen sie gearbeitet haben - da ihre Studie auf den 16.11. datiert ist, arbeiten wir im Folgenden mit den Daten von diesem Tag:
+Daten zur Impfquote - leider geben die Autoren nicht an, auf welchem Stand die Zahlen sind, mit denen sie gearbeitet haben - da ihre Studie auf den 16.11. datiert ist, arbeiten wir im Folgenden mit den Daten von diesem Tag (Daten [hier](https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Archiv/2021-11-16_Deutschland_Impfquoten_COVID-19.csv)):
 
 ```{r}
 
@@ -124,11 +124,6 @@ cor.test(c(500,2000,5000,10000,25000,50000,100000),
 cor.test(c(500,2000,5000,10000,25000,50000,100000),
          c(500,570,600,650,720,780,800))
 
-cor(c(500,2000,5000,10000,25000,50000,100000),
-         c(640,600,780,800,570,650,700))^2*100
-
-cor(c(500,2000,5000,10000,25000,50000,100000),
-         c(500,570,600,650,720,780,800))^2*100
 
 ```
 
