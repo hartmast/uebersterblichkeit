@@ -16,7 +16,6 @@ Zusatzpakete:
 
 ```{r, message=F, warning=F}
 library(tidyverse)
-library(readxl)
 
 ```
 
@@ -103,7 +102,7 @@ uebersterblichkeit <- left_join(uebersterblichkeit, select(impf, !Datum))
 
 # Pearson-Koeffizient
 cor.test(uebersterblichkeit$ues, uebersterblichkeit$Impfquote_gesamt_voll)
-cor.test(uebersterblichkeit$ues, uebersterblichkeit$Impfquote_gesamt_voll, method = "kendall")
+
 
 # Weltkulturerbedaten hinzufügen
 uebersterblichkeit <- left_join(uebersterblichkeit, einw, by = c("Bundesland" = "Land"))

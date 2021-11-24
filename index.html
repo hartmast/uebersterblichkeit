@@ -174,8 +174,7 @@ pre code {
 
 <p>Skript zu <a href="https://hartmast.wordpress.com/2021/11/24/quatsch-statistik-impfquote-und-ubersterblichkeit/">diesem Blogpost</a></p>
 <p>Zusatzpakete:</p>
-<pre class="r"><code>library(tidyverse)
-library(readxl)</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
 <p>Daten zu Sterbefallzahlen (Daten <a href="https://github.com/hartmast/uebersterblichkeit/blob/main/sterbefaelle.csv">hier</a>)</p>
 <pre class="r"><code># Daten einlesen (extrahiert aus Excel-Tabelle https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Sterbefaelle-Lebenserwartung/Tabellen/sonderauswertung-sterbefaelle.html?nn=209016)
 sterbefaelle &lt;- read_csv(&quot;sterbefaelle_nach_bundesland.csv&quot;, col_types = c(&quot;n&quot;, &quot;n&quot;, &quot;c&quot;, &quot;c&quot;, rep(&quot;n&quot;, 42)))
@@ -263,16 +262,6 @@ cor.test(uebersterblichkeit$ues, uebersterblichkeit$Impfquote_gesamt_voll)</code
 ## sample estimates:
 ##         cor 
 ## -0.02614371</code></pre>
-<pre class="r"><code>cor.test(uebersterblichkeit$ues, uebersterblichkeit$Impfquote_gesamt_voll, method = &quot;kendall&quot;)</code></pre>
-<pre><code>## 
-##  Kendall&#39;s rank correlation tau
-## 
-## data:  uebersterblichkeit$ues and uebersterblichkeit$Impfquote_gesamt_voll
-## T = 56, p-value = 0.7566
-## alternative hypothesis: true tau is not equal to 0
-## sample estimates:
-##         tau 
-## -0.06666667</code></pre>
 <pre class="r"><code># Weltkulturerbedaten hinzufügen
 uebersterblichkeit &lt;- left_join(uebersterblichkeit, einw, by = c(&quot;Bundesland&quot; = &quot;Land&quot;))</code></pre>
 <p>Quatsch-Korrelation: Weltkulturerbe &amp; Impfquote</p>
