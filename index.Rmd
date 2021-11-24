@@ -1,0 +1,134 @@
+---
+title: 'Quatsch-Statistik: Übersterblichkeit und Impfquote'
+author: "Stefan Hartmann"
+date: "11/24/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Zusatzpakete:
+
+```{r, message=F, warning=F}
+library(tidyverse)
+library(readxl)
+
+```
+
+Daten zu Sterbefallzahlen:
+
+```{r}
+
+# Daten einlesen (extrahiert aus Excel-Tabelle https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Sterbefaelle-Lebenserwartung/Tabellen/sonderauswertung-sterbefaelle.html?nn=209016)
+sterbefaelle <- read_csv("sterbefaelle_nach_bundesland.csv", col_types = c("n", "n", "c", "c", rep("n", 42)))
+
+# Spaltennamen anpassen
+colnames(sterbefaelle)[5:46] <- paste0("KW", colnames(sterbefaelle)[5:46])
+
+# Gesamtzahl der Sterbefälle
+sf <- filter(sterbefaelle, Alter == "Insgesamt")
+
+# in langes Format überführen
+sf <- pivot_longer(sf, cols = 5:length(sf))
+
+# KW als numerisch
+sf$name <- as.numeric(gsub("KW", "", sf$name))
+
+# Spalte umbenennen
+sf <- rename(sf, "KW" = "name")
+
+# value-Spalte als numerisch
+sf$value <- as.numeric(gsub(" ", "", sf$value))
+
+# nur KW 36 bis 40
+sf36bis40 <- filter(sf, KW %in% c(36:40))
+
+```
+
+Daten zur Impfquote - leider geben die Autoren nicht an, auf welchem Stand die Zahlen sind, mit denen sie gearbeitet haben - da ihre Studie auf den 16.11. datiert ist, arbeiten wir im Folgenden mit den Daten von diesem Tag:
+
+```{r}
+
+# Daten einlesen
+impf <- read_csv("2021-11-16_Deutschland_Impfquoten_COVID-19.csv")
+
+
+```
+
+Zudem nehmen die Autoren eine Gewichtung nach Einwohnerzahl des jeweiligen Bundeslands vor, ohne genauer zu erläutern, wie diese Gewichtung genau erfolgt und nur mit dem generellen Hinweis, dass die Daten auch beim Statistischen Bundesamt verfügbar seien (ohne Link). Deshalb ignorieren wir sie hier, lesen die Daten aber trotzdem ein (um weiter unten die Quatsch-Korrelation zwischen Einwohnerzahl und Weltkulturerbestätten, WKE in der Tabelle, herstellen zu können). Einwohnerdaten aus  https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Bevoelkerungsstand/Tabellen/bevoelkerung-nichtdeutsch-laender.html, Welterbedaten von https://www.welterbetour.de/.
+
+```{r}
+
+einw <- read_csv("einwohnerzahl.csv")
+
+```
+
+Data wrangling - Übersterblichkeit:
+
+```{r}
+
+# Mittelwert der Sterblichkeitszahlen 2016-2020
+
+sf20162020kws <- sf36bis40 %>% filter(Jahr %in% 2016:2020) %>% group_by(Bundesland, Jahr) %>% summarise(
+  deaths = sum(value)
+) %>% group_by(Bundesland) %>% summarise(
+  mean = mean(deaths),
+  sd = sd(deaths)
+)
+
+
+# Sterblichkeitszahlen 2021
+sf2021kws <- sf36bis40 %>% filter(Jahr==2021) %>% group_by(Bundesland) %>%
+  summarise(
+    deaths2021 = sum(value)
+  )
+
+
+# Tabellen verbinden
+uebersterblichkeit <- left_join(sf20162020kws, sf2021kws)
+
+# Übersterblichkeits-Koeffizient hinzufügen
+uebersterblichkeit <- mutate(uebersterblichkeit, ues = (deaths2021 / mean)*100)
+
+# Impfquote hinzufügen
+uebersterblichkeit <- left_join(uebersterblichkeit, select(impf, !Datum))
+
+
+# Korrelationskoeffizient
+
+# Pearson-Koeffizient
+cor.test(uebersterblichkeit$ues, uebersterblichkeit$Impfquote_gesamt_voll)
+cor.test(uebersterblichkeit$ues, uebersterblichkeit$Impfquote_gesamt_voll, method = "kendall")
+
+# Weltkulturerbedaten hinzufügen
+uebersterblichkeit <- left_join(uebersterblichkeit, einw, by = c("Bundesland" = "Land"))
+
+# Weltkulturerbe-Korrelation
+cor.test(uebersterblichkeit$Impfquote_gesamt_voll, uebersterblichkeit$WKE)
+
+# Tabelle: Übersterblichkeit X Impfquote
+uebersterblichkeit %>% select(Bundesland, ues, Impfquote_gesamt_voll) %>% arrange(desc(Impfquote_gesamt_voll))
+
+```
+
+Fiktive Korrelationen Einkommen/Abiturnote:
+
+```{r}
+
+cor.test(c(500,2000,5000,10000,25000,50000,100000),
+         c(640,600,780,800,570,650,700))
+
+cor.test(c(500,2000,5000,10000,25000,50000,100000),
+         c(500,570,600,650,720,780,800))
+
+cor(c(500,2000,5000,10000,25000,50000,100000),
+         c(640,600,780,800,570,650,700))^2*100
+
+cor(c(500,2000,5000,10000,25000,50000,100000),
+         c(500,570,600,650,720,780,800))^2*100
+
+```
+
