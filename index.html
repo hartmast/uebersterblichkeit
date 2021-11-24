@@ -172,6 +172,7 @@ pre code {
 </div>
 
 
+<p>Skript zu <a href="https://hartmast.wordpress.com/2021/11/24/quatsch-statistik-impfquote-und-ubersterblichkeit/">diesem Blogpost</a></p>
 <p>Zusatzpakete:</p>
 <pre class="r"><code>library(tidyverse)
 library(readxl)</code></pre>
@@ -273,9 +274,9 @@ cor.test(uebersterblichkeit$ues, uebersterblichkeit$Impfquote_gesamt_voll)</code
 ##         tau 
 ## -0.06666667</code></pre>
 <pre class="r"><code># Weltkulturerbedaten hinzufügen
-uebersterblichkeit &lt;- left_join(uebersterblichkeit, einw, by = c(&quot;Bundesland&quot; = &quot;Land&quot;))
-
-# Weltkulturerbe-Korrelation
+uebersterblichkeit &lt;- left_join(uebersterblichkeit, einw, by = c(&quot;Bundesland&quot; = &quot;Land&quot;))</code></pre>
+<p>Quatsch-Korrelation: Weltkulturerbe &amp; Impfquote</p>
+<pre class="r"><code># Weltkulturerbe-Korrelation
 cor.test(uebersterblichkeit$Impfquote_gesamt_voll, uebersterblichkeit$WKE)</code></pre>
 <pre><code>## 
 ##  Pearson&#39;s product-moment correlation

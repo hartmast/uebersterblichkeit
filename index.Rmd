@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Skript zu [diesem Blogpost](https://hartmast.wordpress.com/2021/11/24/quatsch-statistik-impfquote-und-ubersterblichkeit/)
+
 
 Zusatzpakete:
 
@@ -105,6 +107,12 @@ cor.test(uebersterblichkeit$ues, uebersterblichkeit$Impfquote_gesamt_voll, metho
 
 # Weltkulturerbedaten hinzufügen
 uebersterblichkeit <- left_join(uebersterblichkeit, einw, by = c("Bundesland" = "Land"))
+
+```
+
+Quatsch-Korrelation: Weltkulturerbe & Impfquote
+
+```{r}
 
 # Weltkulturerbe-Korrelation
 cor.test(uebersterblichkeit$Impfquote_gesamt_voll, uebersterblichkeit$WKE)
